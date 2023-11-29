@@ -79,7 +79,7 @@ def corrupted_links_search(links_list: list, start_from: int = 0) -> None:
     No return
     """
     for link_level1 in links_list[start_from::]:
-        page = get_data_selenium(link_level1)
+        page = get_data_selenium(link_level1, True)
         if page == "404":
             with open("corrupted-links.txt", mode='a') as corrupt_file:
                 corrupt_file.writelines(f"{links_list.index(link_level1)}:{link_level1}\n")
