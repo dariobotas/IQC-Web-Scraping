@@ -90,7 +90,11 @@ if __name__ == "__main__":
             else:
                 href_list_level2 = get_all_a_href_from_scrapping(page)
                 for link_level2 in href_list_level2:
-                    page_level2 = get_data_selenium(link_level2)
+                    page_level2 = ""
+                    if len(link_level2) > 1:
+                        if link_level2[0] == "/":
+                            new_link_level2 = f"https://iqc.pt{link_level2}"
+                            page_level2 = get_data_selenium(link_level2)
                     if page_level2 == "404":
                         with open("site-map-xml.hml", mode='a') as corrupt_file:
                             corrupt_file.write(f"{links_stripped.index(link_level1)}:{link_level1} - "
