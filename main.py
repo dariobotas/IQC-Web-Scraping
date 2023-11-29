@@ -71,37 +71,57 @@ def get_all_links_iqc():
         print(href_list)
 
 
+def corrupted_links_search(links_list, start_from=0):
+    for link_level1 in links_list[start_from::]:
+        page = get_data_selenium(link_level1)
+        if page == "404":
+            with open("corrupted-links.txt", mode='a') as corrupt_file:
+                corrupt_file.writelines(f"{links_list.index(link_level1)}:{link_level1}\n")
+        else:
+            href_list_level2 = get_all_a_href_from_scrapping(page)
+            for link_level2 in href_list_level2:
+                page_level2 = ""
+                if len(link_level2) > 1 and link_level2[0] == "/" and ("/./" not in link_level2):
+                    new_link_level2 = f"https://iqc.pt{link_level2}"
+                    page_level2 = get_data_selenium(new_link_level2, True)
+
+                if page_level2 == "404":
+                    with open("corrupted-links.txt", mode='a') as corrupt_file:
+                        corrupt_file.writelines(f'{links_list.index(link_level1)}:{link_level1} - '
+                                                f'{href_list_level2.index(link_level2)}:{link_level2}\n')
+        with open("visited_links.txt", mode="a") as visited_file:
+            visited_file.writelines(f"{link_level1}\n")
+
 if __name__ == "__main__":
     try:
-        with open("all_iqc_links.txt", mode="r") as file_link:
-            iqc_all_links = file_link.readlines()
+        with open("visited_links.txt", mode="r") as visited_file_link:
+            visited_iqc_links = visited_file_link.readlines()
     except FileNotFoundError:
-        get_all_links_iqc()
+        try:
+            with open("all_iqc_links.txt", mode="r") as file_link:
+                iqc_all_links = file_link.readlines()
+        except FileNotFoundError:
+            get_all_links_iqc()
+        else:
+            # print(type(iqc_all_links))
+            links_stripped = [link.strip("\n") for link in iqc_all_links]
+            # print(get_data_selenium("https://iqc.pt/edificacao/122-comentarios/velho-testamento/1-samuel"))
+            # print(get_data_selenium("https://iqc.pt/videos/12734-mensagem-proferida-domingo-07-de-maio-2017-por-jose"
+            #                        "-carvalho"))
+            corrupted_links_search(links_stripped, 37)
     else:
-        # print(type(iqc_all_links))
-        links_stripped = [link.strip("\n") for link in iqc_all_links]
-        # print(get_data_selenium("https://iqc.pt/edificacao/122-comentarios/velho-testamento/1-samuel"))
-        # print(get_data_selenium("https://iqc.pt/videos/12734-mensagem-proferida-domingo-07-de-maio-2017-por-jose"
-        #                        "-carvalho"))
-        for link_level1 in links_stripped[36::]:
-            page = get_data_selenium(link_level1)
-            if page == "404":
-                with open("corrupted-links.txt", mode='a') as corrupt_file:
-                    corrupt_file.writelines(f"{links_stripped.index(link_level1)}:{link_level1}\n")
-            else:
-                href_list_level2 = get_all_a_href_from_scrapping(page)
-                for link_level2 in href_list_level2:
-                    page_level2 = ""
-                    if len(link_level2) > 1 and link_level2[0] == "/" and ("/./" not in link_level2):
-                        new_link_level2 = f"https://iqc.pt{link_level2}"
-                        page_level2 = get_data_selenium(new_link_level2, True)
+        try:
+            with open("all_iqc_links.txt", mode="r") as file_link:
+                iqc_all_links = file_link.readlines()
+        except FileNotFoundError:
+            get_all_links_iqc()
+        else:
+            # print(type(iqc_all_links))
+            links_stripped = [link.strip("\n") for link in iqc_all_links]
 
-                    if page_level2 == "404":
-                        with open("corrupted-links.txt", mode='a') as corrupt_file:
-                            corrupt_file.writelines(f'{links_stripped.index(link_level1)}:{link_level1} - '
-                                                    f'{href_list_level2.index(link_level2)}:{link_level2}\n')
-            with open("visited_links.txt", mode="a") as visited:
-                visited.writelines(link_level1)
+        not_visited_links_stripped = [link.strip("\n") for link in iqc_all_links if link not in visited_iqc_links]
+        corrupted_links_search(not_visited_links_stripped)
+
 
         """
         #response = requests.get("https://iqc.pt/videos", headers)
