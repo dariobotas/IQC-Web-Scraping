@@ -86,14 +86,15 @@ if __name__ == "__main__":
             page = get_data_selenium(link_level1)
             if page == "404":
                 with open("site-map-xml.hml", mode='a') as corrupt_file:
-                    corrupt_file.write(link_level1)
+                    corrupt_file.write(f"{links_stripped.index(link_level1)}:{link_level1}")
             else:
                 href_list_level2 = get_all_a_href_from_scrapping(page)
                 for link_level2 in href_list_level2:
                     page_level2 = get_data_selenium(link_level2)
                     if page_level2 == "404":
                         with open("site-map-xml.hml", mode='a') as corrupt_file:
-                            corrupt_file.write(link_level2)
+                            corrupt_file.write(f"{links_stripped.index(link_level1)}:{link_level1} - "
+                                               f"{href_list_level2.index(link_level2)}:{link_level2}")
 
         """
         #response = requests.get("https://iqc.pt/videos", headers)
