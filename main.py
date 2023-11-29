@@ -71,7 +71,13 @@ def get_all_links_iqc():
         print(href_list)
 
 
-def corrupted_links_search(links_list, start_from=0):
+def corrupted_links_search(links_list: list, start_from: int = 0) -> None:
+    """
+
+    Returns
+    -------
+    No return
+    """
     for link_level1 in links_list[start_from::]:
         page = get_data_selenium(link_level1)
         if page == "404":
@@ -92,38 +98,32 @@ def corrupted_links_search(links_list, start_from=0):
         with open("visited_links.txt", mode="a") as visited_file:
             visited_file.writelines(f"{link_level1}\n")
 
+
+def get_links_from_iqc_txt():
+    try:
+        with open("all_iqc_links.txt", mode="r") as file_link:
+            iqc_all_links = file_link.readlines()
+    except FileNotFoundError:
+        get_all_links_iqc()
+    else:
+        return iqc_all_links
+
+
 if __name__ == "__main__":
     try:
         with open("visited_links.txt", mode="r") as visited_file_link:
             visited_iqc_links = visited_file_link.readlines()
     except FileNotFoundError:
-        try:
-            with open("all_iqc_links.txt", mode="r") as file_link:
-                iqc_all_links = file_link.readlines()
-        except FileNotFoundError:
-            get_all_links_iqc()
-        else:
-            # print(type(iqc_all_links))
-            links_stripped = [link.strip("\n") for link in iqc_all_links]
-            # print(get_data_selenium("https://iqc.pt/edificacao/122-comentarios/velho-testamento/1-samuel"))
-            # print(get_data_selenium("https://iqc.pt/videos/12734-mensagem-proferida-domingo-07-de-maio-2017-por-jose"
-            #                        "-carvalho"))
-            corrupted_links_search(links_stripped, 37)
+        links_stripped = [link.strip("\n") for link in get_links_from_iqc_txt()]
+        corrupted_links_search(links_stripped, 37)
     else:
-        try:
-            with open("all_iqc_links.txt", mode="r") as file_link:
-                iqc_all_links = file_link.readlines()
-        except FileNotFoundError:
-            get_all_links_iqc()
-        else:
-            # print(type(iqc_all_links))
-            links_stripped = [link.strip("\n") for link in iqc_all_links]
-
-        not_visited_links_stripped = [link.strip("\n") for link in iqc_all_links if link not in visited_iqc_links]
+        not_visited_links_stripped = [link.strip("\n") for link in get_links_from_iqc_txt() if
+                                      link not in visited_iqc_links]
         corrupted_links_search(not_visited_links_stripped)
-
-
         """
+        # print(get_data_selenium("https://iqc.pt/edificacao/122-comentarios/velho-testamento/1-samuel"))
+        # print(get_data_selenium("https://iqc.pt/videos/12734-mensagem-proferida-domingo-07-de-maio-2017-por-jose"
+        #                        "-ca-r-v-a-lh-os-s-ss-s--"))
         #response = requests.get("https://iqc.pt/videos", headers)
         #print(response.status_code)
         options = Options()
