@@ -45,6 +45,12 @@ def get_data_selenium(selenium_url):
         return html
 
 
+def get_all_a_href_from_scrapping(page):
+    iqc_soup = BeautifulSoup(page, "lxml")
+    tbody = iqc_soup.find_all('a', href=True)
+    return [link['href'] for link in tbody]
+
+
 def get_all_links_iqc():
     try:
         with open("site-map-xml.hml", mode='r') as xml_file:
@@ -57,9 +63,7 @@ def get_all_links_iqc():
                 xml_file.write(line)
         get_all_links_iqc()
     else:
-        iqc_soup = BeautifulSoup(site_map_xml, "lxml")
-        tbody = iqc_soup.find_all('a', href=True)
-        href_list = [link['href'] for link in tbody]
+        href_list = get_all_a_href_from_scrapping(site_map_xml)
         with open("all_iqc_links.txt", mode="w") as link_file:
             for href_link in href_list:
                 link_file.writelines(f"{href_link}\n")
@@ -75,14 +79,21 @@ if __name__ == "__main__":
     else:
         print(type(iqc_all_links))
         links_stripped = [link.strip("\n") for link in iqc_all_links]
-        #soup = get_data_selenium(
-        #    "https://iqc.pt/videos/12734-mensagem-proferida-domingo-07-de-maio-2017-por-jose-carvalho"
-        #    )
-        #print(soup)
-        print(get_data_selenium("https://iqc.pt/edificacao/122-comentarios/velho-testamento/1-samuel"))
-        print(get_data_selenium("https://iqc.pt/videos/12734-mensagem-proferida-domingo-07-de-maio-2017-por-jose"
-                                "-carvalho"))
-
+        #print(get_data_selenium("https://iqc.pt/edificacao/122-comentarios/velho-testamento/1-samuel"))
+        #print(get_data_selenium("https://iqc.pt/videos/12734-mensagem-proferida-domingo-07-de-maio-2017-por-jose"
+        #                        "-carvalho"))
+        for link_level1 in links_stripped:
+            page = get_data_selenium(link_level1)
+            if page == "404":
+                with open("site-map-xml.hml", mode='a') as corrupt_file:
+                    corrupt_file.write(link_level1)
+            else:
+                href_list_level2 = get_all_a_href_from_scrapping(page)
+                for link_level2 in href_list_level2:
+                    page_level2 = get_data_selenium(link_level2)
+                    if page_level2 == "404":
+                        with open("site-map-xml.hml", mode='a') as corrupt_file:
+                            corrupt_file.write(link_level2)
 
         """
         #response = requests.get("https://iqc.pt/videos", headers)
