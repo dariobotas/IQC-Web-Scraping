@@ -1,9 +1,8 @@
+import time
+
 import requests
 from bs4 import BeautifulSoup
 from selenium import webdriver
-import time
-
-from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.firefox.service import Service
 
@@ -30,8 +29,10 @@ def get_data(url, browser_headers, features):
     return soup_response
 
 
-def get_data_selenium(selenium_url):
+def get_data_selenium(selenium_url, headless=False):
     options = Options()
+    if headless:
+        options.add_argument("--headless")
     driver_service = Service(r'/snap/bin/geckodriver')
     browser = webdriver.Firefox(service=driver_service, options=options)
 
@@ -45,8 +46,8 @@ def get_data_selenium(selenium_url):
         return html
 
 
-def get_all_a_href_from_scrapping(page):
-    iqc_soup = BeautifulSoup(page, "lxml")
+def get_all_a_href_from_scrapping(page_document):
+    iqc_soup = BeautifulSoup(page_document, "lxml")
     tbody = iqc_soup.find_all('a', href=True)
     return [link['href'] for link in tbody]
 
@@ -77,28 +78,30 @@ if __name__ == "__main__":
     except FileNotFoundError:
         get_all_links_iqc()
     else:
-        print(type(iqc_all_links))
+        # print(type(iqc_all_links))
         links_stripped = [link.strip("\n") for link in iqc_all_links]
-        #print(get_data_selenium("https://iqc.pt/edificacao/122-comentarios/velho-testamento/1-samuel"))
-        #print(get_data_selenium("https://iqc.pt/videos/12734-mensagem-proferida-domingo-07-de-maio-2017-por-jose"
+        # print(get_data_selenium("https://iqc.pt/edificacao/122-comentarios/velho-testamento/1-samuel"))
+        # print(get_data_selenium("https://iqc.pt/videos/12734-mensagem-proferida-domingo-07-de-maio-2017-por-jose"
         #                        "-carvalho"))
-        for link_level1 in links_stripped:
+        for link_level1 in links_stripped[36::]:
             page = get_data_selenium(link_level1)
             if page == "404":
-                with open("site-map-xml.hml", mode='a') as corrupt_file:
-                    corrupt_file.write(f"{links_stripped.index(link_level1)}:{link_level1}")
+                with open("corrupted-links.txt", mode='a') as corrupt_file:
+                    corrupt_file.writelines(f"{links_stripped.index(link_level1)}:{link_level1}\n")
             else:
                 href_list_level2 = get_all_a_href_from_scrapping(page)
                 for link_level2 in href_list_level2:
                     page_level2 = ""
                     if len(link_level2) > 1 and link_level2[0] == "/" and ("/./" not in link_level2):
                         new_link_level2 = f"https://iqc.pt{link_level2}"
-                        page_level2 = get_data_selenium(link_level2)
+                        page_level2 = get_data_selenium(new_link_level2, True)
 
                     if page_level2 == "404":
-                        with open("site-map-xml.hml", mode='a') as corrupt_file:
-                            corrupt_file.write(f"{links_stripped.index(link_level1)}:{link_level1} - "
-                                               f"{href_list_level2.index(link_level2)}:{link_level2}")
+                        with open("corrupted-links.txt", mode='a') as corrupt_file:
+                            corrupt_file.writelines(f'{links_stripped.index(link_level1)}:{link_level1} - '
+                                                    f'{href_list_level2.index(link_level2)}:{link_level2}\n')
+            with open("visited_links.txt", mode="a") as visited:
+                visited.writelines(link_level1)
 
         """
         #response = requests.get("https://iqc.pt/videos", headers)
