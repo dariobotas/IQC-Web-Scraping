@@ -78,26 +78,33 @@ def corrupted_links_search(links_list: list, start_from: int = 0) -> None:
     -------
     No return
     """
+    visited_links = []
     for link_level1 in links_list[start_from::]:
         page = get_data_selenium(link_level1, True)
         if page == "404":
             with open("corrupted-links.txt", mode='a') as corrupt_file:
                 corrupt_file.writelines(f"{links_list.index(link_level1)}:{link_level1}\n")
-        else:
+        elif link_level1 not in visited_links:
             href_list_level2 = get_all_a_href_from_scrapping(page)
             for link_level2 in href_list_level2:
                 page_level2 = ""
                 if len(link_level2) > 1 and link_level2[0] == "/" and ("/./" not in link_level2):
                     new_link_level2 = f"https://iqc.pt{link_level2}"
-                    page_level2 = get_data_selenium(new_link_level2, True)
+                    if new_link_level2 not in visited_links:
+                        page_level2 = get_data_selenium(new_link_level2, True)
+                        visited_links.append(new_link_level2)
 
                 if page_level2 == "404":
                     with open("corrupted-links.txt", mode='a') as corrupt_file:
                         corrupt_file.writelines(f'{links_list.index(link_level1)}:{link_level1} - '
                                                 f'{href_list_level2.index(link_level2)}:{link_level2}\n')
+        visited_links.append(link_level1)
         with open("visited_links.txt", mode="a") as visited_file:
             visited_file.writelines(f"{link_level1}\n")
 
+    with open("visited_links.txt", mode="a") as visited_file:
+        for page in visited_links:
+            visited_file.writelines(f"{page}\n")
 
 def get_links_from_iqc_txt():
     try:
