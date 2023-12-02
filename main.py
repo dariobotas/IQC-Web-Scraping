@@ -33,7 +33,8 @@ def get_data_selenium(selenium_url, headless=False):
     options = Options()
     if headless:
         options.add_argument("--headless")
-    driver_service = Service(r'/snap/bin/geckodriver')
+    #driver_service = Service(r'/snap/bin/geckodriver')
+    driver_service = Service()
     browser = webdriver.Firefox(service=driver_service, options=options)
 
     browser.get(selenium_url)
@@ -82,7 +83,7 @@ def corrupted_links_search(links_list: list, start_from: int = 0) -> None:
     links_added_to_file = []
     page_level2 = ""
     for link_level1 in links_list[start_from::]:
-        page = get_data_selenium(link_level1, True)
+        page = get_data_selenium(link_level1)
         if page == "404":
             with open("corrupted-links.txt", mode='a') as corrupt_file:
                 corrupt_file.writelines(f"{links_list.index(link_level1)}:{link_level1}\n")
