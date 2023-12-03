@@ -1,6 +1,7 @@
 import time
 
 import requests
+import selenium
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
@@ -33,18 +34,24 @@ def get_data_selenium(selenium_url, headless=False):
     options = Options()
     if headless:
         options.add_argument("--headless")
-    #driver_service = Service(r'/snap/bin/geckodriver')
+    # driver_service = Service(r'/snap/bin/geckodriver')
     driver_service = Service()
     browser = webdriver.Firefox(service=driver_service, options=options)
 
-    browser.get(selenium_url)
-    if "404" in browser.title:
-        browser.close()
-        return "404"
+    try:
+        browser.get(selenium_url)
+    except TimeoutError as time_out_error:
+        print(time_out_error)
+    except selenium.common.exceptions.TimeoutException as time_out_exception:
+        print(time_out_exception)
     else:
-        html = browser.page_source
-        browser.close()
-        return html
+        if "404" in browser.title:
+            browser.close()
+            return "404"
+        else:
+            html = browser.page_source
+            browser.close()
+            return html
 
 
 def get_all_a_href_from_scrapping(page_document):
