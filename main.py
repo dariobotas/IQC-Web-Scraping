@@ -41,9 +41,9 @@ def get_data_selenium(selenium_url, headless=False):
     try:
         browser.get(selenium_url)
     except TimeoutError as time_out_error:
-        print(time_out_error)
+        print(f"{time_out_error}\nURL: {selenium_url}")
     except selenium.common.exceptions.TimeoutException as time_out_exception:
-        print(time_out_exception)
+        print(f"{time_out_exception}\nURL: {selenium_url}")
     else:
         if "404" in browser.title:
             browser.close()
@@ -111,7 +111,7 @@ def corrupted_links_search(links_list: list, start_from: int = 0, visited_links_
                         else:
                             print(f"Link {new_link_level2} da página {link_level1} - OK")
                             with open("visited_links.txt", mode="a") as visited_file:
-                                visited_file.writelines(f"{new_link_level2}\n")
+                                visited_file.writelines(f"{new_link_level2}")
             visited_links_list.append(link_level1)
         else:
             print(f"Page from main links ok.\n{link_level1}")
