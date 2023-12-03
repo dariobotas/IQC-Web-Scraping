@@ -81,18 +81,19 @@ def corrupted_links_search(links_list: list, start_from: int = 0, visited_links_
     """
     for link_level1 in links_list[start_from::]:
         page = get_data_selenium(link_level1, True)
+        new_link_level1 = f"{link_level1}\n"
         print(f"A validar a página {link_level1}")
         if page == "404":
             with open("corrupted-links.txt", mode='a') as corrupt_file:
                 corrupt_file.writelines(f"{links_list.index(link_level1)}:{link_level1}\n")
             visited_links_list.append(link_level1)
-        elif link_level1 not in visited_links_list:
+        elif new_link_level1 not in visited_links_list:
             href_list_level2 = get_all_a_href_from_scrapping(page)
             for link_level2 in href_list_level2:
                 if len(link_level2) > 1 and link_level2[0] == "/" and ("/./" not in link_level2):
                     new_link_level2 = f"https://iqc.pt{link_level2}\n"
                     if new_link_level2 not in visited_links_list:
-                        print(f"A validar link: {new_link_level2}")
+                        print(f"A validar link: {new_link_level2} da página {link_level1}")
                         page_level2 = get_data_selenium(new_link_level2.strip("\n"), True)
                         visited_links_list.append(new_link_level2)
 
@@ -101,7 +102,9 @@ def corrupted_links_search(links_list: list, start_from: int = 0, visited_links_
                                 corrupt_file.writelines(f'{links_list.index(link_level1)}:{link_level1} - '
                                                         f'{href_list_level2.index(link_level2)}:{new_link_level2}\n')
                         else:
-                            print(f"Link {new_link_level2} da página {link_level1} ok.")
+                            print(f"Link {new_link_level2} da página {link_level1} - OK")
+                            with open("visited_links.txt", mode="a") as visited_file:
+                                visited_file.writelines(f"{new_link_level2}\n")
             visited_links_list.append(link_level1)
         else:
             print(f"Page from main links ok.\n{link_level1}")
