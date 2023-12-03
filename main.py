@@ -107,7 +107,7 @@ def corrupted_links_search(links_list: list, start_from: int = 0, visited_links_
                         if page_level2 == "404":
                             with open("corrupted-links.txt", mode='a') as corrupt_file:
                                 corrupt_file.writelines(f'{links_list.index(link_level1)}:{link_level1} - '
-                                                        f'{href_list_level2.index(link_level2)}:{new_link_level2}\n')
+                                                        f'{href_list_level2.index(link_level2)}:{new_link_level2}')
                         else:
                             print(f"Link {new_link_level2} da página {link_level1} - OK")
                             with open("visited_links.txt", mode="a") as visited_file:
@@ -180,3 +180,5 @@ if __name__ == "__main__":
         print(status_code)
         browser.close()
         """
+
+
