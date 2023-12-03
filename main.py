@@ -72,43 +72,45 @@ def get_all_links_iqc():
         print(href_list)
 
 
-def corrupted_links_search(links_list: list, start_from: int = 0) -> None:
+def corrupted_links_search(links_list: list, start_from: int = 0, visited_links_list: list = []) -> None:
     """
 
     Returns
     -------
     No return
     """
-    visited_links = []
-    links_added_to_file = []
-    page_level2 = ""
     for link_level1 in links_list[start_from::]:
         page = get_data_selenium(link_level1)
         if page == "404":
             with open("corrupted-links.txt", mode='a') as corrupt_file:
                 corrupt_file.writelines(f"{links_list.index(link_level1)}:{link_level1}\n")
-            visited_links.append(link_level1)
-        elif link_level1 not in visited_links:
+            visited_links_list.append(link_level1)
+        elif link_level1 not in visited_links_list:
             href_list_level2 = get_all_a_href_from_scrapping(page)
             for link_level2 in href_list_level2:
                 if len(link_level2) > 1 and link_level2[0] == "/" and ("/./" not in link_level2):
-                    new_link_level2 = f"https://iqc.pt{link_level2}"
-                    if new_link_level2 not in visited_links:
-                        page_level2 = get_data_selenium(new_link_level2, True)
-                        visited_links.append(new_link_level2)
+                    new_link_level2 = f"https://iqc.pt{link_level2}\n"
+                    if new_link_level2 not in visited_links_list:
+                        print(f"A validar link: {new_link_level2}")
+                        page_level2 = get_data_selenium(new_link_level2.strip("\n"), True)
+                        visited_links_list.append(new_link_level2)
 
                         if page_level2 == "404":
                             with open("corrupted-links.txt", mode='a') as corrupt_file:
                                 corrupt_file.writelines(f'{links_list.index(link_level1)}:{link_level1} - '
                                                         f'{href_list_level2.index(link_level2)}:{new_link_level2}\n')
-            visited_links.append(link_level1)
+                        else:
+                            print(f"Link {new_link_level2} da página {link_level1} ok.")
+            visited_links_list.append(link_level1)
+        else:
+            print(f"Page from main links ok.\n{link_level1}")
         with open("visited_links.txt", mode="a") as visited_file:
             visited_file.writelines(f"{link_level1}\n")
             # visited_file.writelines(page_level2)
             # links_to_write =
 
-    # with open("visited_links.txt", mode="a") as visited_file:
-    #     for page in visited_links:
+    # with open("visited_links_list.txt", mode="a") as visited_file:
+    #     for page in visited_links_list:
     #         visited_file.writelines(f"{page}\n")
 
 
@@ -132,7 +134,8 @@ if __name__ == "__main__":
     else:
         not_visited_links_stripped = [link.strip("\n") for link in get_links_from_iqc_txt() if
                                       link not in visited_iqc_links]
-        corrupted_links_search(not_visited_links_stripped)
+        # print(visited_iqc_links)
+        corrupted_links_search(not_visited_links_stripped, visited_links_list=visited_iqc_links)
         """
         # print(get_data_selenium("https://iqc.pt/edificacao/122-comentarios/velho-testamento/1-samuel"))
         # print(get_data_selenium("https://iqc.pt/videos/12734-mensagem-proferida-domingo-07-de-maio-2017-por-jose"
