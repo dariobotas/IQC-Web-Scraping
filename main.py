@@ -92,10 +92,12 @@ def corrupted_links_search(links_list: list, start_from: int = 0, visited_links_
         page = get_data_selenium(link_level1, True)
         new_link_level1 = f"{link_level1}\n"
         print(f"A validar a página {link_level1}")
+        
         if page == "404":
             with open("corrupted-links.txt", mode='a') as corrupt_file:
                 corrupt_file.writelines(f"{links_list.index(link_level1)}:{link_level1}\n")
             visited_links_list.append(link_level1)
+        
         elif new_link_level1 not in visited_links_list:
             href_list_level2 = get_all_a_href_from_scrapping(page)
             for link_level2 in href_list_level2:
@@ -115,8 +117,8 @@ def corrupted_links_search(links_list: list, start_from: int = 0, visited_links_
                             with open("visited_links.txt", mode="a") as visited_file:
                                 visited_file.writelines(f"{new_link_level2}")
             visited_links_list.append(link_level1)
-        else:
             print(f"Page from main links ok.\n{link_level1}")
+        
         with open("visited_links.txt", mode="a") as visited_file:
             visited_file.writelines(f"{link_level1}\n")
             # visited_file.writelines(page_level2)
