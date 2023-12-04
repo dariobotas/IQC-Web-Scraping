@@ -46,6 +46,8 @@ def get_data_selenium(selenium_url, headless=False):
         print(f"{time_out_exception}\nURL: {selenium_url}\n")
     except selenium.common.exceptions.NoSuchWindowException as window_exception:
         print(f"{window_exception}URL: {selenium_url}\n")
+    except selenium.common.exceptions.WebDriverExceptoin as webdriver_exception:
+        print(f"{webdriver_exception}URL: {selenium_url}\n")
     else:
         if "404" in browser.title:
             browser.close()
