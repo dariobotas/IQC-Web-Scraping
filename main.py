@@ -41,9 +41,11 @@ def get_data_selenium(selenium_url, headless=False):
     try:
         browser.get(selenium_url)
     except TimeoutError as time_out_error:
-        print(f"{time_out_error}\nURL: {selenium_url}")
+        print(f"{time_out_error}\nURL: {selenium_url}\n")
     except selenium.common.exceptions.TimeoutException as time_out_exception:
-        print(f"{time_out_exception}\nURL: {selenium_url}")
+        print(f"{time_out_exception}\nURL: {selenium_url}\n")
+    except selenium.common.exceptions.NoSuchWindowException as window_exception:
+        print(f"{window_exception}URL: {selenium_url}\n")
     else:
         if "404" in browser.title:
             browser.close()
@@ -90,10 +92,12 @@ def corrupted_links_search(links_list: list, start_from: int = 0, visited_links_
         page = get_data_selenium(link_level1, True)
         new_link_level1 = f"{link_level1}\n"
         print(f"A validar a página {link_level1}")
+        
         if page == "404":
             with open("corrupted-links.txt", mode='a') as corrupt_file:
                 corrupt_file.writelines(f"{links_list.index(link_level1)}:{link_level1}\n")
             visited_links_list.append(link_level1)
+        
         elif new_link_level1 not in visited_links_list:
             href_list_level2 = get_all_a_href_from_scrapping(page)
             for link_level2 in href_list_level2:
@@ -107,14 +111,14 @@ def corrupted_links_search(links_list: list, start_from: int = 0, visited_links_
                         if page_level2 == "404":
                             with open("corrupted-links.txt", mode='a') as corrupt_file:
                                 corrupt_file.writelines(f'{links_list.index(link_level1)}:{link_level1} - '
-                                                        f'{href_list_level2.index(link_level2)}:{new_link_level2}\n')
+                                                        f'{href_list_level2.index(link_level2)}:{new_link_level2}')
                         else:
                             print(f"Link {new_link_level2} da página {link_level1} - OK")
                             with open("visited_links.txt", mode="a") as visited_file:
                                 visited_file.writelines(f"{new_link_level2}")
             visited_links_list.append(link_level1)
-        else:
             print(f"Page from main links ok.\n{link_level1}")
+        
         with open("visited_links.txt", mode="a") as visited_file:
             visited_file.writelines(f"{link_level1}\n")
             # visited_file.writelines(page_level2)
@@ -180,3 +184,5 @@ if __name__ == "__main__":
         print(status_code)
         browser.close()
         """
+
+
