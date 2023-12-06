@@ -64,8 +64,8 @@ def get_data_selenium(selenium_url, headless=False):
 
 def get_all_a_href_from_scrapping(page_document):
     iqc_soup = BeautifulSoup(page_document, "lxml")
-    tbody = iqc_soup.find_all('a', href=True)
-    return [link['href'] for link in tbody]
+    a_href_element = iqc_soup.find_all('a', href=True)
+    return [link['href'] for link in a_href_element]
 
 
 def get_all_links_iqc():
