@@ -1559,3 +1559,6 @@
 1241:https://iqc.pt/edificacao/56-ensino/criancas/7482-o-menino-da-mata-e-o-seu-cao-piloto-i - 19:https://iqc.pt/crian-as/o-menino-da-mata-e-o-seu-c-o-piloto-ii.html
 1242:https://iqc.pt/edificacao/56-ensino/criancas/7483-o-menino-da-mata-e-o-seu-cao-piloto-ii - 19:https://iqc.pt/crian-as/o-menino-da-mata-e-o-seu-c-o-piloto-i.html
 1251:https://iqc.pt/edificacao/56-ensino/criancas/7493-apontamento-da-priscila - 19:https://iqc.pt/component/content/40-todas-as-noticias-e-artigos/evangelizacao/religiao/adventismo?layout=blog&Itemid=62
+230:https://iqc.pt/edificacao/devocional/meditacoes/8289-nunca-podera-dar-demais-a-deus - 12:https://iqc.pt/doutrinal/doutrinal2.html
+230:https://iqc.pt/edificacao/devocional/meditacoes/8289-nunca-podera-dar-demais-a-deus - 13:https://iqc.pt/doutrinal/doutrinal3.html
+230:https://iqc.pt/edificacao/devocional/meditacoes/8289-nunca-podera-dar-demais-a-deus - 14:https://iqc.pt/doutrinal/o-d-zimo.html
