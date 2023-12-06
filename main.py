@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.firefox.service import Service
+from sys import platform
 
 URL = "https://iqc.pt/component/osmap/?view=xml&id=1&format=xml"
 URL2 = "https://iqc.pt/component/osmap/?view=html&id=1"
@@ -32,10 +33,13 @@ def get_data(url, browser_headers, features):
 
 def get_data_selenium(selenium_url, headless=False):
     options = Options()
+    driver_service = None
     if headless:
         options.add_argument("--headless")
-    # driver_service = Service(r'/snap/bin/geckodriver')
-    driver_service = Service()
+    if platform == "linux" or platform == "linux2":
+        driver_service = Service(r'/snap/bin/geckodriver')  # for linux systems
+    elif platform == "win32" or platform == "win64":
+        driver_service = Service()  # for Windows systems
     browser = webdriver.Firefox(service=driver_service, options=options)
 
     try:
@@ -83,13 +87,15 @@ def get_all_links_iqc():
         print(href_list)
 
 
-def corrupted_links_search(links_list: list, start_from: int = 0, visited_links_list: list = []) -> None:
+def corrupted_links_search(links_list: list, start_from: int = 0, visited_links_list=None) -> None:
     """
 
     Returns
     -------
     No return
     """
+    if visited_links_list is None:
+        visited_links_list = []
     for link_level1 in links_list[start_from::]:
         page = get_data_selenium(link_level1, True)
         new_link_level1 = f"{link_level1}\n"
@@ -186,5 +192,3 @@ if __name__ == "__main__":
         print(status_code)
         browser.close()
         """
-
-
