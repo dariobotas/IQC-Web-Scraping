@@ -1562,3 +1562,7 @@
 230:https://iqc.pt/edificacao/devocional/meditacoes/8289-nunca-podera-dar-demais-a-deus - 12:https://iqc.pt/doutrinal/doutrinal2.html
 230:https://iqc.pt/edificacao/devocional/meditacoes/8289-nunca-podera-dar-demais-a-deus - 13:https://iqc.pt/doutrinal/doutrinal3.html
 230:https://iqc.pt/edificacao/devocional/meditacoes/8289-nunca-podera-dar-demais-a-deus - 14:https://iqc.pt/doutrinal/o-d-zimo.html
+670:https://iqc.pt/edificacao/devocional/meditacoes/9041-vencendo-o-mdeo - 12:https://iqc.pt/component/content/35-todas-as-noticias-e-artigos/edificacao/literatura/revista/487-manejar-bem-a-palavra-da-verdade?Itemid=56
+670:https://iqc.pt/edificacao/devocional/meditacoes/9041-vencendo-o-mdeo - 13:https://iqc.pt/component/content/97-todas-as-noticias-e-artigos/edificacao/comentarios/novo-testamento/joao1/9073-o-ima-de-deus?Itemid=57
+713:https://iqc.pt/edificacao/devocional/meditacoes/9059-a-palavra-uma-pia - 12:https://iqc.pt/component/content/41-todas-as-noticias-e-artigos/evangelizacao/religiao/islamismo/9965-a-palavra--um-espelho?Itemid=65
+835:https://iqc.pt/edificacao/devocional/meditacoes/7587-construindo-valores - 12:https://iqc.pt/component/content/62-todas-as-noticias-e-artigos/edificacao/literatura/testemunhos/2387-quacres?Itemid=78
