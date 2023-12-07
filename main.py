@@ -131,6 +131,7 @@ def corrupted_links_search(links_list: list, start_from: int = 0, visited_links_
             visited_file.writelines(f"{link_level1}\n")
             # visited_file.writelines(page_level2)
             # links_to_write =
+    print("Search done.\nPlease verify the files visited_links.txt and corrupted-links.txt")
 
     # with open("visited_links_list.txt", mode="a") as visited_file:
     #     for page in visited_links_list:
