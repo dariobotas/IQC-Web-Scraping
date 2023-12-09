@@ -129,13 +129,7 @@ def corrupted_links_search(links_list: list, start_from: int = 0, visited_links_
         
         with open("visited_links.txt", mode="a") as visited_file:
             visited_file.writelines(f"{link_level1}\n")
-            # visited_file.writelines(page_level2)
-            # links_to_write =
     print("Search done.\nPlease verify the files visited_links.txt and corrupted-links.txt")
-
-    # with open("visited_links_list.txt", mode="a") as visited_file:
-    #     for page in visited_links_list:
-    #         visited_file.writelines(f"{page}\n")
 
 
 def get_links_from_iqc_txt():
@@ -158,38 +152,4 @@ if __name__ == "__main__":
     else:
         not_visited_links_stripped = [link.strip("\n") for link in get_links_from_iqc_txt() if
                                       link not in visited_iqc_links]
-        # print(visited_iqc_links)
         corrupted_links_search(not_visited_links_stripped, visited_links_list=visited_iqc_links)
-        """
-        # print(get_data_selenium("https://iqc.pt/edificacao/122-comentarios/velho-testamento/1-samuel"))
-        # print(get_data_selenium("https://iqc.pt/videos/12734-mensagem-proferida-domingo-07-de-maio-2017-por-jose"
-        #                        "-ca-r-v-a-lh-os-s-ss-s--"))
-        #response = requests.get("https://iqc.pt/videos", headers)
-        #print(response.status_code)
-        options = Options()
-        driver_service = Service(r'/snap/bin/geckodriver')
-        browser = webdriver.Firefox(service=driver_service, options=options)
-
-        browser.get('https://iqc.pt/edificacao/122-comentarios/velho-testamento/1-samuel')
-        page = "https://iqc.pt/edificacao/122-comentarios/velho-testamento/1-samuel"
-        js = '''
-        let callback = arguments[0];
-        let xhr = new XMLHttpRequest();
-        xhr.open('GET','''
-        f"{page}"
-        ''', true);
-        xhr.onload = function () {
-            if (this.readyState === 4) {
-                callback(this.status);
-            }
-        };
-        xhr.onerror = function () {
-            callback('error');
-        };
-        xhr.send(null);
-        '''
-
-        status_code = browser.execute_async_script(js)
-        print(status_code)
-        browser.close()
-        """
