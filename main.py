@@ -152,4 +152,5 @@ if __name__ == "__main__":
     else:
         not_visited_links_stripped = [link.strip("\n") for link in get_links_from_iqc_txt() if
                                       link not in visited_iqc_links]
+        print(len(not_visited_links_stripped))
         corrupted_links_search(not_visited_links_stripped, visited_links_list=visited_iqc_links)
